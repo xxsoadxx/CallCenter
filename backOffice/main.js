@@ -60,6 +60,7 @@ function viewChat(elem) {
   
     $( "#"+id+" .new" ).hide( );
     $( ".msg-box" ).attr("id", "box-"+id );
+    $( "#container" ).html("");
     
     if ($('#'+id+' .connected').length){
         $('#msg').prop("disabled",false);
