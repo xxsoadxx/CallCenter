@@ -1,0 +1,385 @@
+<!doctype html>
+<html lang="en">
+
+	<head>
+		<meta charset="UTF-8">
+		<title>BackOffice</title>
+		<link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Open+Sans">
+		<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css">
+		<style>
+			
+			body {
+				margin:0;
+				text-align: left;
+				background-color: #fff;
+				font-family: Open Sans;
+			}
+
+			.header {
+				height: 80px;
+				top: 0px;
+				background-color: #367bbf;
+				width: 100%;
+
+			}
+
+			.navigation {
+				width: 80px;
+				left: 0px;
+				position: absolute;
+				height: calc(100% - 80px); ;
+			}
+
+			.container{
+				width: 100%;
+				overflow-x: hidden;
+			}
+
+			.screen {
+				margin-left: 80px;
+				position: absolute;
+				width: calc(100% - 80px);
+				height: calc(100% - 80px); 
+				background-color: #f6f6f6;
+			}
+
+			.chats-boxes{
+				float: left;
+				width: 390px;
+				height: calc( 100% - 40px);
+				background-color: white;
+				margin: 20px 20px 20px 20px;
+				position: relative;
+				overflow-y: auto;
+			}
+			.title {
+				color: #367bbf;
+				position: relative;
+				top: 23px;
+				padding-left: 22px;
+				
+				margin: 0;
+			}
+			.title-box{
+				border-bottom: 1px solid #efefef;
+				height: 68px;
+			}
+
+			.person-avatar{
+				height: 61px;
+				border-radius: 50px;
+				float: left;
+				margin-left: 18px;
+				margin-top: 11px;
+			}
+			.name{
+				padding-left: 90px;
+				margin-bottom: 0px;
+				font-size: 18px;
+				margin-top: 0;
+				padding-top: 16px;
+			}
+			.last-msg{
+				margin-top: 0px;
+				padding-left: 90px;
+				color: grey;
+				font-size: 14px;
+			}
+			.box{
+				display: block;
+				position: relative;
+				height: 83px;
+				border-bottom: 1px solid #efefef;
+				cursor: pointer;
+			}
+			.time{
+				float: right;
+				color: grey;
+				font-size: 14px;
+				position: absolute;
+				right: 11px;
+				top: 5px;
+			}
+			.new {
+				font-size: 10px;
+				position: absolute;
+				right: 8px;
+				bottom: 12px;
+				background-color: #c3c3c3;
+				width: 43px;
+				text-align: center;
+				color: white;
+				border-radius: 7px;
+			}
+			.msg-box{
+				float: left;
+				width: 390px;
+				height: calc( 100% - 40px);
+				background-color: white;
+				margin: 20px 20px 20px 20px;
+				position: relative;
+				overflow-y: auto;
+				display: none;
+				width: calc(100% - 872px);
+			}
+
+			.enviar{
+				bottom: 8px;
+				position: absolute;
+				right: 8px;
+				background-color: #4980ab;
+				color: #FFF;
+				width: 50px;
+				height: 50px;
+				border-radius: 50px !important;
+				padding-left: 9px;
+				border: none;
+				padding-right: 13px;
+				text-align: center;
+			}
+			.msgInput{
+				border: none;
+				background-color: transparent;
+				border-bottom: 2px solid #BBB7BC;
+				width: 100%;
+			}
+			.bar {
+				position: relative;
+				display: block;
+			}
+
+			.bar:before,
+			.bar:after {
+				content: '';
+				height: 2px;
+				width: 0;
+				bottom: 1px;
+				position: absolute;
+				background: #4980ab; 
+				transition: 0.2s ease all;
+			}
+
+			.bar:before {
+				left: 50%;
+			}
+
+			.bar:after {
+				right: 50%; 
+			}
+
+			.mui-form-control:focus {
+				border-color: transparent;
+			}
+
+			.mui-form-control:focus ~ .bar:before,
+			.mui-form-control:focus ~ .bar:after {
+				width: 50%;
+			}
+			.mui-form-group{
+				position: absolute;
+				bottom: 20px;
+				left: 15px;
+				width: calc(100% - 110px);
+			}
+			.conversation{
+				width: 100%;
+				height: calc(100% - 88px);
+				overflow-x:hidden;
+				overflow-y:scroll;
+				border-bottom: 1px solid #E2DDE3;
+				padding-top: 16px;
+			}
+
+			#container::-webkit-scrollbar {
+				width: 0 !important;
+			}
+
+			
+			/** ios1-ios6 bubbles **/
+			.bubble {
+			box-sizing: border-box;
+			float: left;
+			width: auto;
+			max-width: 80%;
+			position: relative;
+			clear: both;
+			background: #FFF;
+			background-image: -webkit-gradient(linear, left bottom, left top, color-stop(0.15, rgba(255, 255, 255)), color-stop(1, rgba(255, 255, 255)));
+			background-image: -webkit-linear-gradient(bottom, rgba(255, 255, 255) 15%, rgba(255, 255, 255) 100%);
+			background-image: -moz-linear-gradient(bottom, rgba(255, 255, 255) 15%, rgba(255, 255, 255) 100%);
+			background-image: -ms-linear-gradient(bottom, rgba(255, 255, 255) 15%, rgba(255, 255, 255) 100%);
+			background-image: -o-linear-gradient(bottom, rgba(255, 255, 255) 15%, rgba(255, 255, 255) 100%);
+			background-image: linear-gradient(bottom, rgba(255, 255, 255) 15%, rgba(255, 255, 255) 100%);
+			filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0,startColorstr='rgba(255, 255, 255)', endColorstr='rgba(255, 255, 255)');
+			border: solid 1px  #367bbf;
+			-webkit-border-radius: 20px;
+			-moz-border-radius: 20px;
+			border-radius: 20px;
+			/*-webkit-box-shadow: inset 0 8px 5px rgba(255,255,255), 0 1px 2px rgba(0,0,0,0.2);
+			-moz-box-shadow: inset 0 8px 5px rgba(255,255,255), 0 1px 2px rgba(0,0,0,0.2);
+			box-shadow: inset 0 8px 5px rgba(255,255,255), 0 1px 2px rgba(0,0,0,0.2);*/
+			margin-bottom: 20px;
+			padding: 6px 20px;
+			color: #000;
+			/*text-shadow: 0 1px 1px rgba(255,255,255);*/
+			word-wrap: break-word;
+			margin-left: 14px;
+			}
+			.bubble:before, .bubble:after {
+			border-radius: 20px / 5px;
+			content: '';
+			display: block;
+			position: absolute;
+			}
+			.bubble:before {
+			border: 10px solid transparent;
+			border-bottom-color: rgba(0,0,0,0.5);
+			bottom: 0px;
+			left: -7px;
+			z-index: -2;
+			}
+			.bubble:after {
+			border: 8px solid transparent;
+			border-bottom-color: #367bbf; /* arrow color */
+			bottom: 1px;
+			left: -5px;
+			}
+			.bubble-alt-sofia {
+			float: right;
+			margin-right: 14px;
+			margin-left: 0px;
+			}
+			.bubble-alt-sofia:before {
+			left: auto;
+			right: -7px;
+			}
+			.bubble-alt {
+			float: right;
+			margin-right: 14px;
+			margin-left: 0px;
+			}
+			.bubble-alt:before {
+			left: auto;
+			right: -7px;
+			}
+			.bubble-alt:after {
+			left: auto;
+			right: -5px;
+			}
+			.bubble p {
+			font-size: 1.4em;
+			}
+			.yellow {
+			background-color: #367bbf !important;
+			background: #367bbf !important;
+			background-image: -webkit-gradient(linear,left bottom,left top,color-stop(0.15, rgba(255, 255, 255)),color-stop(1, rgba(255, 255, 255)));
+			background-image: -webkit-linear-gradient(bottom, rgba(255, 255, 255) 15%, rgba(255, 255, 255) 100%);
+			background-image: -moz-linear-gradient(bottom, rgba(255, 255, 255) 15%, rgba(255, 255, 255) 100%);
+			background-image: -ms-linear-gradient(bottom, rgba(255, 255, 255) 15%, rgba(255, 255, 255) 100%);
+			background-image: -o-linear-gradient(bottom, rgba(255, 255, 255) 15%, rgba(255, 255, 255) 100%);
+			background-image: linear-gradient(bottom, rgba(255, 255, 255) 15%, rgba(255, 255, 255) 100%);
+			filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0,startColorstr='rgba(255, 255, 255)', endColorstr='rgba(255, 255, 255)');
+			}
+			.yellow:after {
+			border-bottom-color: #367bbf;
+			}
+			
+			.sofia {
+			background-color: rgb(107, 36, 131) !important;
+			background: rgb(107, 36, 131) !important;
+			background-image: -webkit-gradient(linear,left bottom,left top,color-stop(0.15, rgba(255, 255, 255)),color-stop(1, rgba(255, 255, 255)));
+			background-image: -webkit-linear-gradient(bottom, rgba(255, 255, 255) 15%, rgba(255, 255, 255) 100%);
+			background-image: -moz-linear-gradient(bottom, rgba(255, 255, 255) 15%, rgba(255, 255, 255) 100%);
+			background-image: -ms-linear-gradient(bottom, rgba(255, 255, 255) 15%, rgba(255, 255, 255) 100%);
+			background-image: -o-linear-gradient(bottom, rgba(255, 255, 255) 15%, rgba(255, 255, 255) 100%);
+			background-image: linear-gradient(bottom, rgba(255, 255, 255) 15%, rgba(255, 255, 255) 100%);
+			filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0,startColorstr='rgba(255, 255, 255)', endColorstr='rgba(255, 255, 255)');
+			border-color:rgb(107, 36, 131) !important;
+			}
+			.sofia:after {
+			border-bottom-color:rgb(107, 36, 131) !important;
+			}
+			.sofia p {
+				color: #FFF !important;
+			}
+
+			.connected{
+				width: 15px;
+				height: 15px;
+				position: absolute;
+				background-color: green;
+				border-radius: 51px;
+				left: 61px;
+				bottom: 18px;
+				border: 2px solid white;
+			}
+			.desconectado{
+				width: 15px;
+				height: 15px;
+				position: absolute;
+				background-color: grey;
+				border-radius: 51px;
+				left: 61px;
+				bottom: 18px;
+				border: 2px solid white;
+			}
+			.selected {
+				background-color:#9eddff;
+			}
+				
+		</style>
+
+	</head>
+
+	<body>
+		<div class="header">
+				
+		</div>
+		<div class="container">
+			
+			<div class="navigation">
+			
+			</div>
+			<div class="screen">
+				<div class="chats-boxes">
+					<div class="title-box">
+						<h3 class="title">Chat </h3>
+					</div>
+					<div id="boxes">
+
+					</div>
+					<!--<div id="dsf324das" class="box">
+						<img class="person-avatar" src="./profile.png" />
+						<h2 class="name">Santiago Ravera<div class="connected"></div></h2>
+						<p class="last-msg">Ultimo mensaje</p>
+						<span class="time">1 min</span>
+						<span class="new">Nuevo</span>
+					</div>-->
+
+					
+				</div>
+				<div class="msg-box">
+					<div class="conversation" id="container">
+						<!--<div class="bubble bubble-alt ">
+							<p style="font-size: 16px;color: rgb(152, 152, 152);margin-bottom: 10px;margin-top: 10px;">Hola, ¿En que te puedo ayudar?</p>
+							
+						</div>
+						<div class="bubble yellow"><p style="font-size:16px;margin-bottom: 10px;margin-top: 10px;color:#FFF;">textsdgvff sdfdsfgdf dshghsgh'</p></div>-->
+					</div>
+					<div class="mui-form-group">
+						<input id="msg" type="text" class="msgInput mui-form-control" placeholder="Escribe un mensaje..." />
+						<span class="bar"></span>
+					</div>
+					
+					<button id="send" onclick="sendMessage()" type="button" class="btn enviar"><i style="font-size: 23px;" class="fa fa-paper-plane" aria-hidden="true"></i><br></button>
+				</div>
+			
+			</div>
+		</div>
+		
+		<script src="/jquery-3.2.1.min.js"></script>
+		<script src="/socket.io/socket.io.js"></script>
+		<script src="/main.js"></script>
+	</body>
+
+</html>
