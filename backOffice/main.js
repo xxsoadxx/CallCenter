@@ -10,7 +10,8 @@ function sendMessage(){
     
     var text = $("#msg").val();
     if(text !== ''){
-        var id = $( ".msg-box" ).attr("id");
+        var idConversation = $( ".msg-box" ).attr("id");
+        var idUser = $( ".msg-box" ).attr("idUser");
 
         $("#msg").val('');
         
@@ -19,7 +20,8 @@ function sendMessage(){
 
         var egPayload = {
             "message": text,
-            "id": id.replace("box-", "")
+            "idUser": idUser,
+            "idConversation":idConversation.replace("box-", "")
         };
         $("#container").append('<div class="bubble bubble-alt "><p style="font-size: 16px;color: rgb(152, 152, 152);margin-bottom: 10px;margin-top: 10px;">'+text+'</p></div>');
         $("#container").animate({ scrollTop: $('#container').prop("scrollHeight")}, 1000);
@@ -54,12 +56,14 @@ $(document).keypress(function(e) {
     
 function viewChat(elem) {
     var id = $(elem).attr("id");
+    var idUser = $(elem).attr("idUser");
     $(".selected").removeClass( "selected" );
     $(elem).addClass("selected");
 
   
     $( "#"+id+" .new" ).hide( );
     $( ".msg-box" ).attr("id", "box-"+id );
+    $( ".msg-box" ).attr("idUser",idUser);
     $( "#container" ).html("");
     
     if ($('#'+id+' .connected').length){
@@ -86,10 +90,10 @@ function viewChat(elem) {
 // Whenever the server emits 'login', log the login message
 socket.on('desconectado', function (data) {
     
-    if ($('#'+data.id).length){
-        $( "#"+data.id+" .connected" ).attr( "class","desconectado" );
+    if ($('#'+data.idConversation).length){
+        $( "#"+data.idConversation+" .connected" ).attr( "class","desconectado" );
 
-        if ($('#box-'+data.id).length){
+        if ($('#box-'+data.idConversation).length){
             $('#msg').prop("disabled",true);
             $('#send').prop("disabled",true);
         }
@@ -98,24 +102,24 @@ socket.on('desconectado', function (data) {
 // Whenever the server emits 'login', log the login message
 socket.on('message', function (data) {
     console.log(data);
-    if ($('#'+data.id).length){
+    if ($('#'+data.idConversation).length){
         console.log("Existe");
-        $( "#"+data.id+" .last-msg" ).text( data.message );
+        $( "#"+data.idConversation+" .last-msg" ).text( data.message );
        
 
-        if ($('#box-'+data.id).length){
+        if ($('#box-'+data.idConversation).length){
             $("#container").append('<div class="bubble yellow "><p style="font-size: 16px;color: #FFF;margin-bottom: 10px;margin-top: 10px;">'+data.message+'</p></div>');
             if(data.response !== undefined){
             $("#container").append('<div class="bubble bubble-alt sofia"><p style="font-size: 16px;color: rgb(152, 152, 152);margin-bottom: 10px;margin-top: 10px;">'+data.response+'</p></div>');
             }
             $("#container").animate({ scrollTop: $('#container').prop("scrollHeight")}, 1000);
         }else{
-            $( "#"+data.id+" .new" ).show( );
+            $( "#"+data.idConversation+" .new" ).show( );
         }
 
     }else{
         console.log("No Existe");
-        var html = '<div id="'+data.id+'" onclick="viewChat(this)" class="box"><img class="person-avatar" src="./profile.png" /> \
+        var html = '<div id="'+data.idConversation+'" idUser="'+data.id+'" onclick="viewChat(this)" class="box"><img class="person-avatar" src="./profile.png" /> \
         <h2 class="name">'+data.name+'<div class="connected"></h2><p class="last-msg">'+data.message+'</p> \
         <span class="time">Ahora</span><span class="new">Nuevo</span></div>'
 

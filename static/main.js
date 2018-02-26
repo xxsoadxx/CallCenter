@@ -1,12 +1,14 @@
-
+const url='http://localhost:3000/apiClient/'
 var socket = io();
 var Opened = false;
 var data = false;
 var sofia = true;
 var name;
 var email;
+var idConversation;
+
 socket.on('connect', function() {
-    console.log("Successfully connected!");
+    console.log("Successfully connected! ",socket.id);
     $.get("chat.html", function (data) {
         $("#chatZone").append(data);
     });
@@ -18,7 +20,7 @@ socket.on('response', function (data) {
     console.log(data);
     sofia = data.sofia
     $("#container").append('<div class="bubble bubble-alt "><p style="font-size: 16px;color: rgb(255, 116, 4);;margin-bottom: 0px;">'+data.message+'</p></div>');
-    $("#container").animate({ scrollTop: $('#container').prop("scrollHeight")}, 1000);
+    $("#container").animate({ scrollTop: $('#container').prop("scrollHeight")}, 100);
 });
 
 function sendMessage(){
@@ -27,13 +29,15 @@ function sendMessage(){
     if(text !== ''){
         $("#msg").val('');
         $("#container").append('<div class="bubble yellow"><p style="font-size:16px;margin-bottom: 0px;color:#FFF;">'+text+'</p></div>');
-        $("#container").animate({ scrollTop: $('#container').prop("scrollHeight")}, 1000);
+        $("#container").animate({ scrollTop: $('#container').prop("scrollHeight")}, 100);
         console.log("sendMsg");
         var egPayload = {
             "name":name,
             "email":email,
             "sofia":sofia,
-            "message": text
+            "message": text,
+            "id":socket.id,
+            "idConversation":idConversation
         };
         console.log(egPayload);
         socket.emit('message', egPayload);
@@ -90,9 +94,35 @@ function LoginData(){
     console.log(name);
     console.log(email);
     if(name !== '' && email !== ''){
-        data = true;
-        $('.chatLogin').css( "display", "none", 'important' );
-        $('.chatBody').css( "display", "block", 'important' );
+        console.log('socket ',socket.id)
+        var body={
+            Email:email,
+            Nombre:name,
+            Id:socket.id
+        }
+        $.ajax({
+          url:url+"newUser",
+          type:"POST",
+          data:JSON.stringify(body),
+          contentType:"application/json; charset=utf-8",
+          dataType:"json",
+          success: function(response){
+            console.log(response)
+            if(response.success){
+                idConversation=response.data.ConversationId
+                console.log('idConversation ',idConversation)
+                data = true;
+                $('.chatLogin').css( "display", "none", 'important' );
+                $('.chatBody').css( "display", "block", 'important' );
+            }
+            else{
+                alert(response.message)
+            }
+          }
+        })
+    }
+    else{
+        alert('Complete los datos')
     }
 
 }
